@@ -10,6 +10,10 @@ class Item extends AuditableEntity implements IItem
 
     protected string|null $description;
 
+    public function __construct(protected array $attributes = []){
+        parent::__construct($attributes);
+    }
+
     /**
      * @return string|null
      */

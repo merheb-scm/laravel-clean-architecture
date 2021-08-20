@@ -3,6 +3,7 @@
 namespace App\Domain\Entities;
 
 use App\Domain\Interfaces\IAuditableEntity;
+use Illuminate\Support\Str;
 
 abstract class AuditableEntity implements IAuditableEntity
 {
@@ -15,6 +16,18 @@ abstract class AuditableEntity implements IAuditableEntity
     protected ?\DateTime $createdAt = null;
 
     protected ?\DateTime $updatedAt = null;
+
+    public function __construct(protected array $attributes = [])
+    {
+        /*
+        foreach ($attributes as $key => $value){
+            $setMethod = 'set'. Str::studly($key);
+            if (method_exists($this, $setMethod)){
+                $this->{$setMethod}($value);
+            }
+        }
+        */
+    }
 
     /**
      * @return int|null

@@ -4,6 +4,7 @@ namespace App\Adapters\Presenters\Items;
 
 use App\Adapters\ViewModels\ApiResponseModel;
 use App\Domain\Interfaces\IJsonResponse;
+use App\Domain\Interfaces\Items\IItem;
 use App\Domain\UseCases\Items\GetItems\IGetItemsResponse;
 use App\Http\Resources\ItemResource;
 use App\Models\Item;
@@ -25,12 +26,16 @@ class GetItemsApiResponse implements IGetItemsResponse
     }
 
     /**
-     * @param Collection<Item> $items
+     * @param Collection<IItem> $items
      *
      * @return IJsonResponse
      */
     public function itemsCollection(Collection $items): IJsonResponse
     {
-        return new ApiResponseModel(response()->json(ItemResource::collection($items)));
+        $itemsResource = $items->map(function (IItem $item){
+            return new ItemResource(Item::fromEntity($item));
+        });
+
+        return new ApiResponseModel(response()->json($itemsResource));
     }
 }

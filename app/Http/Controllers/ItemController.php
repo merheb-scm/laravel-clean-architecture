@@ -14,6 +14,7 @@ use App\Domain\UseCases\Items\UpdateItem\UpdateItemRequestModel;
 use App\Http\Requests\CreateItemRequest;
 use App\Http\Requests\UpdateItemRequest;
 use App\Http\Resources\ItemResource;
+use App\Jobs\SendEmail;
 use App\Models\Item;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\JsonResponse;
@@ -67,6 +68,8 @@ class ItemController extends Controller
         if ($responseModel instanceof ApiResponseModel) {
             return $responseModel->getResponse();
         }
+
+        $this->dispatch(new SendEmail());
 
         return null;
     }

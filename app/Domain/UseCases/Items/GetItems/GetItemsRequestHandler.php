@@ -5,7 +5,10 @@ namespace App\Domain\UseCases\Items\GetItems;
 use App\Domain\Entities\RequestModel;
 use App\Domain\Interfaces\IJsonResponse;
 use App\Domain\Interfaces\IRequestHandler;
+use App\Domain\Interfaces\Items\IItem;
 use App\Domain\Interfaces\Items\IItemRepository;
+use Illuminate\Support\Collection;
+use League\CommonMark\Util\ArrayCollection;
 
 class GetItemsRequestHandler implements IRequestHandler
 {
@@ -25,8 +28,6 @@ class GetItemsRequestHandler implements IRequestHandler
         if (!($requestModel instanceof GetItemsRequestModel)) {
             return $this->output->badRequest('Incorrect Input Type');
         }
-
-        // NB. items is a collection of Laravel Model <Item> -> this a problem, we solve it without doing double conversion
         $items = $this->repository->findByKeywords($requestModel->getKeywords());
 
         return $this->output->itemsCollection($items);

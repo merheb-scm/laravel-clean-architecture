@@ -37,22 +37,22 @@ class ItemRepository implements IItemRepository
 
     /**
      * ATT. this return a collection of Laravel Model
+     *
      * @param string|null $keywords
      *
-     * @return Collection<Item>
+     * @return Collection<IItem>
      */
     public function findByKeywords(?string $keywords): Collection
     {
-        if ($keywords) {
-            return Item::where('title', 'like', "%{$keywords}%")->orWhere('description', 'like', "%{$keywords}%")->get();
-        }
+        $items = (!$keywords)
+            ? Item::all()
+            : Item::where('title', 'like', "%{$keywords}%")
+                ->orWhere('description', 'like', "%{$keywords}%")
+                ->get();
 
-        return Item::all();
-        /*
-        return array_map(function ($item) {
+        return $items->map(function (Item $item) {
             return $item->toEntity();
-        }, $items);
-        */
+        });
     }
 
     /**
@@ -76,7 +76,7 @@ class ItemRepository implements IItemRepository
     {
         $item = Item::find($itemEntity->getId() ?? 0);
         $item?->update([
-                           'title'       => $itemEntity->getTitle(),
+                           'title' => $itemEntity->getTitle(),
                            'description' => $itemEntity->getDescription(),
                        ]);
 
